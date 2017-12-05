@@ -143,9 +143,10 @@ $(document).ready(function () {
 <li>(15 points) Show us that you have <tt>Git</tt> installed on your computer. Utilize the checklist in <tt>Notes_10A</tt> to create a new project within <strong>RStudio</strong> that is tied to your “36-350” repo on <tt>GitHub</tt>. Then follow the listed steps in <tt>Notes_10A</tt> to create a new <tt>R Script</tt> (and <em>not</em> an <tt>R Markdown</tt> file) in which you put <tt>print(“Hello, world!”)</tt>. Save this file (call it <tt>hello_world.R</tt>) to your local “36-350” repo. Stage the file, commit the file (and add a commit message), and push the file to <tt>GitHub</tt>. (If when you try to commit you see an error referring to an <tt>index.lock</tt> file, try to commit again…I’ve seen such an error when trying to commit files on my machine and it appears to be a random occurrence.) Follow the steps above to find the URL to the raw file for <tt>hello_world.R</tt> and copy and paste that URL below in the call to <tt>source_url()</tt>. If everything works, “Hello, world!” should appear.</li>
 </ol></li>
 </ul>
-<pre class="r"><code>#install.packages(&quot;devtools&quot;)  # uncomment this if you need to install devtools
-library(devtools)
-#source_url(&quot;Enter the URL to hello_world.R Here&quot;)</code></pre>
+<pre class="r"><code>library(devtools)
+source_url(&quot;https://raw.githubusercontent.com/dgisser/36-350/master/hello_word.R&quot;)</code></pre>
+<pre><code>## SHA-1 hash of file is fdb57365c00e7a5cc6521098d8e732e3075f01f6</code></pre>
+<pre><code>## [1] &quot;Hello, world!&quot;</code></pre>
 <hr>
 <p>In the following questions, utilize this base code by copying and pasting it into your code chunks, then adding material. (<tt>error=TRUE</tt> will cause <tt>R Markdown</tt> to keep knitting even if you throw an exception.)</p>
 <pre class="r"><code>f = function(x) { 
@@ -155,13 +156,47 @@ library(devtools)
 <li><ol start="3" style="list-style-type: decimal">
 <li>(5 points) Add an appropriate warning, but don’t change what is returned. Call the function is such a way that the warning message is observed. Was the final output from the function what you expected it to be?</li>
 </ol></li>
+</ul>
+<pre class="r"><code>f = function(x) {
+  if(typeof(x) == &quot;double&quot;) {
+    warning(&quot;that's not the right type&quot;)
+  }
+  tolower(x) 
+}
+f(2)</code></pre>
+<pre><code>## Warning in f(2): that's not the right type</code></pre>
+<pre><code>## [1] &quot;2&quot;</code></pre>
+<p>It is a little strange that the output was converted to a string.</p>
+<ul>
 <li><ol start="4" style="list-style-type: decimal">
 <li>(5 points) Change the warning in Q3 to an error. Call the function is such a way that the error message is observed.</li>
 </ol></li>
+</ul>
+<pre class="r"><code>f = function(x) {
+  if(typeof(x) == &quot;double&quot;) {
+    stop(&quot;that's not the right type&quot;)
+  }
+  tolower(x) 
+}
+f(2)</code></pre>
+<pre><code>## Error in f(2): that's not the right type</code></pre>
+<ul>
 <li><ol start="5" style="list-style-type: decimal">
 <li>(5 points) Keep your code from Q4, but add a message at the beginning saying what the function is supposed to do when called properly. Run the function two times, once with improper input, and a second time with proper input (e.g., “A”) but in conjunction with <tt>suppressMessages()</tt>, so the message is not observed.</li>
 </ol></li>
 </ul>
+<pre class="r"><code>f = function(x) {
+  message(&quot;returns lower case string&quot;)
+  if(typeof(x) == &quot;double&quot;) {
+    stop(&quot;that's not the right type&quot;)
+  }
+  tolower(x) 
+}
+f(2)</code></pre>
+<pre><code>## returns lower case string</code></pre>
+<pre><code>## Error in f(2): that's not the right type</code></pre>
+<pre class="r"><code>suppressMessages(f(&quot;HELLO, WORLD&quot;))</code></pre>
+<pre><code>## [1] &quot;hello, world&quot;</code></pre>
 <hr>
 <p>In the following questions, utilize this base code by copying and pasting it into your code chunks, then adding material.</p>
 <pre class="r"><code>f = function(x) { 
@@ -172,12 +207,52 @@ library(devtools)
 <li><ol start="6" style="list-style-type: decimal">
 <li>(5 points) In the code chunk below, first run the code as it is defined above with a character input. Confirm that an error is generated and that you don’t see the word “foo”. Then, below that function call, redefine the function <tt>f()</tt> so that it includes a call to <tt>try()</tt> at an appropriate place. Then call your updated function with a character input. Do you see the word “foo” now?</li>
 </ol></li>
+</ul>
+<pre class="r"><code>f = function(x) { 
+  sqrt(x)
+  print(&quot;foo&quot;)
+}
+f(&quot;hello, world&quot;)</code></pre>
+<pre><code>## Error in sqrt(x): non-numeric argument to mathematical function</code></pre>
+<pre class="r"><code>f = function(x) {
+  try(sqrt(x))
+  print(&quot;foo&quot;)
+}
+f(&quot;hello, world&quot;)</code></pre>
+<pre><code>## [1] &quot;foo&quot;</code></pre>
+<p>Yes</p>
+<ul>
 <li><ol start="7" style="list-style-type: decimal">
 <li>(10 points) Alter your function in Q6, replacing the <tt>try()</tt> with <tt>tryCatch()</tt> (and deleting the <tt>print(“foo”)</tt>). Catch what you feel are the relevant conditions here, and deal with them appropriately (by informing the user what went wrong). (For instance…do you think <tt>sqrt()</tt> issues informative messages? Or not?) Call the function with a character, and call it again with a negative number.</li>
 </ol></li>
+</ul>
+<pre class="r"><code>f = function(x) {
+  tryCatch(sqrt(x),
+    error = function(c) &quot;Error: input is not a number.&quot;,
+    warning = function(c) &quot;Warning: input is a negative number.&quot;)
+}
+f(&quot;A&quot;)</code></pre>
+<pre><code>## [1] &quot;Error: input is not a number.&quot;</code></pre>
+<pre class="r"><code>f(-2)</code></pre>
+<pre><code>## [1] &quot;Warning: input is a negative number.&quot;</code></pre>
+<ul>
 <li><ol start="8" style="list-style-type: decimal">
 <li>(10 points) Repeat Q7, but add a <tt>finally</tt> argument to <tt>tryCatch()</tt> that prints (or more elegantly, if you want, cats) the value of <span class="math inline">\(x\)</span>. Repeat the testing calls made in Q7.</li>
 </ol></li>
+</ul>
+<pre class="r"><code>f = function(x) {
+  tryCatch(sqrt(x),
+    error = function(c) &quot;Error: input is not a number.&quot;,
+    warning = function(c) &quot;Warning: input is a negative number.&quot;,
+    finally = {cat(x)})
+}
+f(&quot;A&quot;)</code></pre>
+<pre><code>## A</code></pre>
+<pre><code>## [1] &quot;Error: input is not a number.&quot;</code></pre>
+<pre class="r"><code>f(-2)</code></pre>
+<pre><code>## -2</code></pre>
+<pre><code>## [1] &quot;Warning: input is a negative number.&quot;</code></pre>
+<ul>
 <li><ol start="9" style="list-style-type: decimal">
 <li>(20 points) Someone on your code development team has come to you and said that he has a great idea for determining whether two words are alike: convert the letters of the words to integer vectors (with “a” mapping to 1, “B” to 2, etc.), and use the statistic computed when carrying out the Wilcoxon rank sum test as a metric of similarity. (This is kinda wildly wrong, but let’s go with it.) The coder then provided the function below and stated that it must go into the next release now, Now, NOW!</li>
 </ol></li>
@@ -191,11 +266,58 @@ library(devtools)
 word.similarity(&quot;foo&quot;,&quot;bar&quot;)</code></pre>
 <pre><code>## [1] 6</code></pre>
 <p>(Yeah, he’s a bit lazy.) As a dutiful member of the team, your first responsibility is to write a series of tests utilizing functions in the <tt>testthat</tt> that will determine whether or not this code is operating correctly. Below, write at least six different test function calls, some but not all of which should fail. (Don’t use any one <tt>testthat</tt> function, like <tt>expect_equal()</tt>, more than twice.) They can include tests that you know will fail, based on some future expectation: for instance, you can test whether a certain input yields a <tt>NULL</tt> (that test would fail currently). (Or whether that same input yields an error.) Then, when you improve the code below in the next question, you can improve it in such a way that your now-known-to-fail test will pass the next time. (Note that if two words have no overlap in the numerical ranks of their letters, like “aaa” and “zzz”, the statistic will be zero.)</p>
+<pre class="r"><code>library(testthat)
+test_that(desc = &quot;two empty strings&quot;, expect_silent(word.similarity(&quot;&quot;,&quot;&quot;)))</code></pre>
+<pre><code>## Error: Test failed: 'two empty strings'
+## * 'x' must be numeric
+## 1: expect_silent(word.similarity(&quot;&quot;, &quot;&quot;))
+## 2: evaluate_promise(object)
+## 3: with_sink(temp, withCallingHandlers(withVisible(code), warning = handle_warning, 
+##        message = handle_message))
+## 4: withCallingHandlers(withVisible(code), warning = handle_warning, message = handle_message)
+## 5: withVisible(code)
+## 6: word.similarity(&quot;&quot;, &quot;&quot;)
+## 7: suppressWarnings(wilcox.test(x = word.1.integers, y = word.2.integers)$statistic[[1]]) at &lt;text&gt;:5
+## 8: withCallingHandlers(expr, warning = function(w) invokeRestart(&quot;muffleWarning&quot;))
+## 9: wilcox.test(x = word.1.integers, y = word.2.integers) at &lt;text&gt;:5
+## 10: wilcox.test.default(x = word.1.integers, y = word.2.integers)
+## 11: stop(&quot;'x' must be numeric&quot;)</code></pre>
+<pre class="r"><code>test_that(desc = &quot;invalid input&quot;, expect_error(word.similarity(1,2)))
+test_that(desc = &quot;output type check&quot;, expect_type(word.similarity(&quot;hi&quot;,&quot;hi&quot;),&quot;double&quot;))
+test_that(desc = &quot;silent error check&quot;, expect_silent(word.similarity(&quot;hi&quot;,&quot;hi&quot;)))
+test_that(desc = &quot;null check&quot;, expect_null(word.similarity(&quot;&quot;,&quot;&quot;)))</code></pre>
+<pre><code>## Error: Test failed: 'null check'
+## * 'x' must be numeric
+## 1: expect_null(word.similarity(&quot;&quot;, &quot;&quot;))
+## 2: expect(is.null(object), sprintf(&quot;%s is not null.&quot;, lab), info = info)
+## 3: as.expectation(exp, ..., srcref = srcref)
+## 4: word.similarity(&quot;&quot;, &quot;&quot;)
+## 5: suppressWarnings(wilcox.test(x = word.1.integers, y = word.2.integers)$statistic[[1]]) at &lt;text&gt;:5
+## 6: withCallingHandlers(expr, warning = function(w) invokeRestart(&quot;muffleWarning&quot;))
+## 7: wilcox.test(x = word.1.integers, y = word.2.integers) at &lt;text&gt;:5
+## 8: wilcox.test.default(x = word.1.integers, y = word.2.integers)
+## 9: stop(&quot;'x' must be numeric&quot;)</code></pre>
+<pre class="r"><code>test_that(desc = &quot;result check&quot;, expect_equal(word.similarity(&quot;aaa&quot;,&quot;zzz&quot;),0))</code></pre>
 <ul>
 <li><ol start="10" style="list-style-type: decimal">
 <li>(10 points) Rewrite <tt>word.similarity()</tt> below in such a way that all your tests of Q9 pass. (And demonstrate that your tests pass!)</li>
 </ol></li>
 </ul>
+<pre class="r"><code>word.similarity = function(word.1,word.2)
+{
+  if (word.2 == &quot;&quot; || word.2 == &quot;&quot;) {
+    return(NULL)
+  }
+  word.1.integers = sapply(unlist(strsplit(word.1,&quot;&quot;)),function(x){which(letters==x)})
+  word.2.integers = sapply(unlist(strsplit(word.2,&quot;&quot;)),function(x){which(letters==x)})
+  suppressWarnings(wilcox.test(x=word.1.integers,y=word.2.integers)$statistic[[1]])
+}
+test_that(desc = &quot;two empty strings&quot;, expect_silent(word.similarity(&quot;&quot;,&quot;&quot;)))
+test_that(desc = &quot;invalid input&quot;, expect_error(word.similarity(1,2)))
+test_that(desc = &quot;output type check&quot;, expect_type(word.similarity(&quot;hi&quot;,&quot;hi&quot;),&quot;double&quot;))
+test_that(desc = &quot;silent error check&quot;, expect_silent(word.similarity(&quot;hi&quot;,&quot;hi&quot;)))
+test_that(desc = &quot;null check&quot;, expect_null(word.similarity(&quot;&quot;,&quot;&quot;)))
+test_that(desc = &quot;result check&quot;, expect_equal(word.similarity(&quot;aaa&quot;,&quot;zzz&quot;),0))</code></pre>
 
 
 
