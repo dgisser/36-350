@@ -1,3 +1,1 @@
-Hello new friends,
-
-I live on the planet Earth in what we know as the Milky Way Galaxy. I live among a community of billions of other humans, quite similar to myself. We seek to understand and thrive within the universe as we know it, and would like to form a mutually beneficial relationship. If that is not possible, we would like for you to continue our legacy, whether we still exist or not, and try to seek to understand this vast expanse.
+print("Hello new friends, I live on the planet Earth in what we know as the Milky Way Galaxy. I live among a community of billions of other humans, quite similar to myself. We seek to understand and thrive within the universe as we know it, and would like to form a mutually beneficial relationship. If that is not possible, we would like for you to continue our legacy, whether we still exist or not, and try to seek to understand this vast expanse.")
